@@ -5,44 +5,82 @@ import random
 class DecisionTree:
     def __init__(self, max_depth=5, feature_indices=None):
         self.max_depth = max_depth
-        self.feature_index = None
-        self.threshold = None
-        self.left_value = None
-        self.right_value = None
         self.feature_indices = feature_indices
+        self.tree = None
 
-    def fit(self, X, y):
+    class Node:
+        def __init__(self, feature_index=None, threshold=None, left=None, right=None, value=None):
+            self.feature_index = feature_index
+            self.threshold = threshold
+            self.left = left
+            self.right = right
+            self.value = value
+
+    def _weighted_mse(self, y):
+        if len(y) == 0:
+            return 0
+        mean = np.mean(y)
+        return np.mean((y - mean) ** 2)
+
+    def _best_split(self, X, y, features):
         best_score = float('inf')
-        n_samples, n_features = X.shape
-        features = self.feature_indices if self.feature_indices is not None else range(n_features)
+        best_feature = None
+        best_threshold = None
+        best_left_indices = None
+        best_right_indices = None
 
         for feature in features:
             thresholds = np.unique(X[:, feature])
             for t in thresholds:
-                left_mask = X[:, feature] <= t
-                right_mask = ~left_mask
-                if left_mask.sum() == 0 or right_mask.sum() == 0:
+                left_indices = np.where(X[:, feature] <= t)[0]
+                right_indices = np.where(X[:, feature] > t)[0]
+
+                if len(left_indices) == 0 or len(right_indices) == 0:
                     continue
 
-                # Weighted MSE instead of Gini
-                left_mean = y[left_mask].mean()
-                right_mean = y[right_mask].mean()
-
-                left_mse = np.mean((y[left_mask] - left_mean) ** 2)
-                right_mse = np.mean((y[right_mask] - right_mean) ** 2)
-
-                weighted_mse = (left_mask.sum() * left_mse + right_mask.sum() * right_mse) / n_samples
+                left_mse = self._weighted_mse(y[left_indices])
+                right_mse = self._weighted_mse(y[right_indices])
+                weighted_mse = (len(left_indices) * left_mse + len(right_indices) * right_mse) / len(y)
 
                 if weighted_mse < best_score:
                     best_score = weighted_mse
-                    self.feature_index = feature
-                    self.threshold = t
-                    self.left_value = left_mean
-                    self.right_value = right_mean
+                    best_feature = feature
+                    best_threshold = t
+                    best_left_indices = left_indices
+                    best_right_indices = right_indices
+
+        return best_feature, best_threshold, best_left_indices, best_right_indices
+
+    def _build_tree(self, X, y, depth):
+        if depth == self.max_depth or len(set(y)) == 1:
+            return self.Node(value=np.mean(y))
+
+        n_samples, n_features = X.shape
+        features = self.feature_indices if self.feature_indices is not None else range(n_features)
+
+        feature, threshold, left_indices, right_indices = self._best_split(X, y, features)
+
+        if feature is None:
+            return self.Node(value=np.mean(y))
+
+        left_child = self._build_tree(X[left_indices], y[left_indices], depth + 1)
+        right_child = self._build_tree(X[right_indices], y[right_indices], depth + 1)
+
+        return self.Node(feature_index=feature, threshold=threshold, left=left_child, right=right_child)
+
+    def fit(self, X, y):
+        self.tree = self._build_tree(X, y, 0)
+
+    def _predict_row(self, row, node):
+        if node.value is not None:
+            return node.value
+        if row[node.feature_index] <= node.threshold:
+            return self._predict_row(row, node.left)
+        else:
+            return self._predict_row(row, node.right)
 
     def predict(self, X):
-        feature = self.feature_index
-        return np.where(X[:, feature] <= self.threshold, self.left_value, self.right_value)
+        return np.array([self._predict_row(row, self.tree) for row in X])
 
 
 class GradientBoostingClassifier:
@@ -86,7 +124,7 @@ class GradientBoostingClassifier:
         return sorted(random.sample(range(n_features), k))
 
     def fit(self, X, y):
-        random.seed(42) 
+        random.seed(42)
 
         if self.normalize:
             X = self._normalize_features(X)
