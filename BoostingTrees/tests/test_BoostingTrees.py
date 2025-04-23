@@ -197,3 +197,58 @@ def test_ibm_attrition_dataset():
     assert y_pred.shape == y.shape
     assert accuracy_score(y, y_pred) > 0.5
 
+def test_moon_data_full_metrics():
+    X, y = load_data("moon_classification_data.csv", label_col="label")
+    model = GradientBoostingClassifier(n_estimators=150, learning_rate=0.05, max_depth=2)
+    model.fit(X, y)
+    y_pred = model.predict(X)
+    y_proba = model.predict_proba(X)[:, 1]
+
+    precision = manual_precision(y, y_pred)
+    recall = manual_recall(y, y_pred)
+    f1 = manual_f1(precision, recall)
+    logloss = manual_log_loss(y, y_proba)
+    mse = manual_mse(y, y_proba)
+    mae = manual_mae(y, y_proba)
+    r2 = manual_r2(y, y_proba)
+
+    print_classification_metrics(y, y_pred, name="Moon Dataset Test")
+    print(f"Precision: {precision:.4f}")
+    print(f"Recall: {recall:.4f}")
+    print(f"F1 Score: {f1:.4f}")
+    print(f"Log Loss: {logloss:.4f}")
+    print(f"MSE: {mse:.4f}")
+    print(f"MAE: {mae:.4f}")
+    print(f"R² Score: {r2:.4f}")
+
+    assert y_pred.shape == y.shape
+    assert accuracy_score(y, y_pred) > 0.8
+
+
+def test_circle_data_full_metrics():
+    X, y = load_data("circle_classification_data.csv", label_col="label")
+    model = GradientBoostingClassifier(n_estimators=150, learning_rate=0.05, max_depth=2)
+    model.fit(X, y)
+    y_pred = model.predict(X)
+    y_proba = model.predict_proba(X)[:, 1]
+
+    precision = manual_precision(y, y_pred)
+    recall = manual_recall(y, y_pred)
+    f1 = manual_f1(precision, recall)
+    logloss = manual_log_loss(y, y_proba)
+    mse = manual_mse(y, y_proba)
+    mae = manual_mae(y, y_proba)
+    r2 = manual_r2(y, y_proba)
+
+    print_classification_metrics(y, y_pred, name="Circle Dataset Test")
+    print(f"Precision: {precision:.4f}")
+    print(f"Recall: {recall:.4f}")
+    print(f"F1 Score: {f1:.4f}")
+    print(f"Log Loss: {logloss:.4f}")
+    print(f"MSE: {mse:.4f}")
+    print(f"MAE: {mae:.4f}")
+    print(f"R² Score: {r2:.4f}")
+
+    assert y_pred.shape == y.shape
+    assert accuracy_score(y, y_pred) > 0.8
+
