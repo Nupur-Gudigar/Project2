@@ -24,20 +24,21 @@ class DecisionTree:
                 if left_mask.sum() == 0 or right_mask.sum() == 0:
                     continue
 
-                left_prob = y[left_mask].mean()
-                right_prob = y[right_mask].mean()
+                # Weighted MSE instead of Gini
+                left_mean = y[left_mask].mean()
+                right_mean = y[right_mask].mean()
 
-                gini_left = 1 - (left_prob ** 2 + (1 - left_prob) ** 2)
-                gini_right = 1 - (right_prob ** 2 + (1 - right_prob) ** 2)
+                left_mse = np.mean((y[left_mask] - left_mean) ** 2)
+                right_mse = np.mean((y[right_mask] - right_mean) ** 2)
 
-                gini = (left_mask.sum() * gini_left + right_mask.sum() * gini_right) / n_samples
+                weighted_mse = (left_mask.sum() * left_mse + right_mask.sum() * right_mse) / n_samples
 
-                if gini < best_score:
-                    best_score = gini
+                if weighted_mse < best_score:
+                    best_score = weighted_mse
                     self.feature_index = feature
                     self.threshold = t
-                    self.left_value = left_prob
-                    self.right_value = right_prob
+                    self.left_value = left_mean
+                    self.right_value = right_mean
 
     def predict(self, X):
         feature = self.feature_index
