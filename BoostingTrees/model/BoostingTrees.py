@@ -101,8 +101,12 @@ class GradientBoostingClassifier:
     def _sigmoid(self, x):
         return 1 / (1 + np.exp(-x))
 
-    def _log_loss_gradient(self, y_true, y_pred):
-        return y_true - self._sigmoid(y_pred)
+    def _log_loss_grad_hess(self, y_true, y_pred):
+        p = self._sigmoid(y_pred)
+        grad = p - y_true
+        hess = p * (1 - p)
+        hess = np.clip(hess, 1e-6, 1.0)
+        return grad, hess
 
     def _normalize_features(self, X):
         self.mean = X.mean(axis=0)
@@ -137,7 +141,9 @@ class GradientBoostingClassifier:
         tolerance = 1e-4
 
         for i in range(self.n_estimators):
-            residual = self._log_loss_gradient(y, y_pred)
+            grad, hess = self._log_loss_grad_hess(y, y_pred)
+            residual = -grad / hess
+
             feature_subset = self._get_feature_subset(X.shape[1])
             tree = DecisionTree(max_depth=self.max_depth, feature_indices=feature_subset)
             tree.fit(X, residual)
