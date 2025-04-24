@@ -253,7 +253,5 @@ def test_circle_data_full_metrics():
     assert y_pred.shape == y.shape
     assert accuracy_score(y, y_pred) > 0.8
 
-    plot_confusion_matrix(y_test, y_pred)
-    plot_roc_curve(y_test, y_proba)
-
-
+    plot_confusion_matrix(y, y_pred, title="Confusion Matrix")
+    plot_roc_curve(y, y_proba, title="ROC Curve")
