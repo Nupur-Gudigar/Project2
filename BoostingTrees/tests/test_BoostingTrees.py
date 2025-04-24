@@ -7,6 +7,7 @@ import sys
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from model.BoostingTrees import GradientBoostingClassifier
+from tests.visualize_results import plot_confusion_matrix, plot_roc_curve
 
 def load_data(file_name, label_col):
     file_path = os.path.join(os.path.dirname(__file__), file_name)
@@ -251,4 +252,8 @@ def test_circle_data_full_metrics():
 
     assert y_pred.shape == y.shape
     assert accuracy_score(y, y_pred) > 0.8
+
+    plot_confusion_matrix(y_test, y_pred)
+    plot_roc_curve(y_test, y_proba)
+
 
