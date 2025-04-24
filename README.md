@@ -30,7 +30,7 @@ We also used 80/20 train-test splitting and ensured robustness through reproduci
 
 ### Example usage:
 ```bash
-python tests/test_model.py
+python tests/test_BoostingTrees.py
 ```
 
 ## Are there specific inputs your model has trouble with?
@@ -44,18 +44,19 @@ Given more time, feature encoding, early stopping, and hyperparameter tuning wou
 ## Files & Structure
 ```
 Project2/
-├── data/
-│   ├── generate_data.py
-│   ├── ibm_attrition.csv
-│   └── synthetic_data.csv
-├── models/
-│   ├── gradient_boost.py
-│   └── regression_tree.py
-├── tests/
-│   ├── __init__.py
-│   └── test_model.py
-├── utils/
-│   └── metrics.py
+├── Boosting Trees/
+│   ├── models/
+│   │   ├── BoostingTrees.py
+│   │   └── __init__.py
+│   ├── tests/
+│   │   ├── __init__.py
+│   │   ├── circle_classification_data.csv
+│   │   ├── classification_data.csv
+│   │   ├── ibm_attrition.csv
+│   │   ├── moon_classification_data.csv
+│   │   └── test_BoostingTrees.py
+│   ├── generate_data.md
+│   ├── requirements.txt
 ├── confusion_matrix.png
 ├── README.md
 └── roc_curve.png
