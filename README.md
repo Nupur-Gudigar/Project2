@@ -49,26 +49,26 @@ Each decision tree splits based on variance reduction (as a proxy for classifica
 
 ## Getting Started
 
-### 1️⃣ Clone the repository
+### 1. Clone the repository
 
 ```bash
 git clone https://github.com/Nupur-Gudigar/Project2.git
 cd Project2/Boosting Trees
 ```
 
-### 2️⃣ Install dependencies
+### 2. Install dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 3️⃣ Run the model
+### 3. Run the model
 
 ```bash
 python tests/test_BoostingTrees.py
 ```
 
-### 4️⃣ Generate synthetic datasets (optional)
+### 4. Generate synthetic datasets (optional)
 
 ```bash
 python generate_data.py
