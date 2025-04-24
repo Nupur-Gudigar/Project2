@@ -1,5 +1,5 @@
 
-# Gradient Boosting Classifier from Scratch
+# Boosting Trees
 
 This project implements a gradient boosting classifier from first principles, based on Sections 10.9–10.10 of "The Elements of Statistical Learning (2nd Edition)".
 
