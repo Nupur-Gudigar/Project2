@@ -7,7 +7,6 @@ import sys
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from model.BoostingTrees import GradientBoostingClassifier
-from tests.visualize_results import plot_confusion_matrix, plot_roc_curve
 
 def load_data(file_name, label_col):
     file_path = os.path.join(os.path.dirname(__file__), file_name)
@@ -170,7 +169,6 @@ def test_ibm_attrition_dataset():
     y = df["Attrition"].values
     X = df.select_dtypes(include=[np.number]).drop("EmployeeNumber", axis=1, errors="ignore").values
 
-    # Normalize features
     X = (X - X.mean(axis=0)) / (X.std(axis=0) + 1e-8)
 
     model = GradientBoostingClassifier(n_estimators=150, learning_rate=0.05, max_depth=2, normalize=False)
@@ -252,6 +250,3 @@ def test_circle_data_full_metrics():
 
     assert y_pred.shape == y.shape
     assert accuracy_score(y, y_pred) > 0.8
-
-    plot_confusion_matrix(y, y_pred, title="Confusion Matrix")
-    plot_roc_curve(y, y_proba, title="ROC Curve")
