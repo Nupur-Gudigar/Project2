@@ -1,18 +1,73 @@
-# Project 2
 
-## Boosting Trees
+# Gradient Boosting Classifier from Scratch
 
-Implement again from first principles the gradient-boosting tree classification algorithm (with the usual fit-predict interface as in Project 1) as described in Sections 10.9-10.10 of Elements of Statistical Learning (2nd Edition). Answer the questions below as you did for Project 1. In this assignment, you'll be responsible for developing your own test data to ensure that your implementation is satisfactory. (Hint: Use the same directory structure as in Project 1.)
+This project implements a gradient boosting classifier from first principles, based on Sections 10.9–10.10 of "The Elements of Statistical Learning (2nd Edition)".
 
-The same "from first principals" rules apply; please don't use SKLearn or any other implementation. Please provide examples in your README that will allow the TAs to run your model code and whatever tests you include. As usual, extra credit may be given for an "above and beyond" effort.
+## What does the model do and when should it be used?
 
-As before, please clone this repo, work on your solution as a fork, and then open a pull request to submit your assignment. *A pull request is required to submit and your project will not be graded without a PR.*
+The model is a binary classifier that uses decision trees as weak learners and fits them sequentially to correct errors of previous models using gradient descent on a logistic loss function. It should be used for structured data with complex relationships where ensemble methods outperform single estimators.
 
-Put your README below. Answer the following questions.
+## How did you test your model?
 
-* What does the model you have implemented do and when should it be used?
-* How did you test your model to determine if it is working reasonably correctly?
-* What parameters have you exposed to users of your implementation in order to tune performance? (Also perhaps provide some basic usage examples.)
-* Are there specific inputs that your implementation has trouble with? Given more time, could you work around these or is it fundamental?
+We tested the implementation on the real-world IBM employee attrition dataset. We manually computed evaluation metrics such as:
+- Accuracy
+- Precision
+- Recall
+- F1 Score
+- ROC AUC
+- Log Loss
+- Mean Squared Error (MSE)
+- Mean Absolute Error (MAE)
+- R² Score
 
+We also used 80/20 train-test splitting and ensured robustness through reproducible shuffling.
 
+## What parameters have you exposed for tuning?
+
+- `n_estimators`: Number of boosting iterations
+- `learning_rate`: Shrinkage factor for updates
+- `max_depth`: Depth of individual decision trees
+
+### Example usage:
+```bash
+python tests/test_model.py
+```
+
+## Are there specific inputs your model has trouble with?
+
+- Highly imbalanced data may reduce recall without tuning.
+- Noisy or irrelevant features may lead to overfitting if trees are deep.
+- Missing values or non-numeric categorical columns need preprocessing.
+
+Given more time, feature encoding, early stopping, and hyperparameter tuning would be incorporated.
+
+## Files & Structure
+```
+Project2/
+├── data/
+│   ├── generate_data.py
+│   ├── ibm_attrition.csv
+│   └── synthetic_data.csv
+├── models/
+│   ├── gradient_boost.py
+│   └── regression_tree.py
+├── tests/
+│   ├── __init__.py
+│   └── test_model.py
+├── utils/
+│   └── metrics.py
+├── confusion_matrix.png
+├── README.md
+└── roc_curve.png
+```
+
+## Credits
+
+This project was completed as part of **CS 584 – Machine Learning** coursework.
+
+| Name              | A-Number      | Email                          |
+|-------------------|---------------|--------------------------------|
+| Nupur Gudigar     | A20549865     | ngudigar@hawk.iit.edu          |
+| Zaigham Shaikh    | A20554429     | zshaikh4@hawk.iit.edu          |
+| Nehil Joshi       | A20554381     | njoshi20@hawk.iit.edu          |
+| Riddhi Das        | A20582829     | rdas8@hawk.iit.edu             |
