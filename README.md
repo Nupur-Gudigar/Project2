@@ -60,7 +60,7 @@ cd Project2/Boosting Trees
 ### 2️⃣ Install dependencies
 
 ```bash
-pip install numpy matplotlib pandas seaborn
+pip install -r requirements.txt
 ```
 
 ### 3️⃣ Run the model
