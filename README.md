@@ -12,9 +12,10 @@
 6. [Summary of Test Scenarios](#summary-of-test-scenarios)
 7. [Visual Output Samples](#visual-output-samples)
 8. [Adjustable Parameters](#adjustable-parameters)
-9. [Limitations & Future Work](#limitations--future-work)
-10. [Q&A](#qa)
-11. [Team Members](#team-members)
+9. [Basic Usage Example](#basic-usage-example)
+10. [Limitations & Future Work](#limitations--future-work)
+11. [Q&A](#qa)
+12. [Team Members](#team-members)
 
 ---
 
@@ -229,6 +230,28 @@ All configurable in `GradientBoostingClassifier`:
 
 ---
 
+---
+
+## Basic Usage Example
+
+Here’s how to train and test the Gradient Boosting Classifier on one of the provided datasets:
+
+```python
+from BoostingTrees.model.BoostingTrees import GradientBoostingClassifier
+import pandas as pd
+
+df = pd.read_csv("BoostingTrees/tests/classification_data.csv")
+X = df.drop("label", axis=1).values
+y = df["label"].values
+
+model = GradientBoostingClassifier(n_estimators=100, learning_rate=0.1, max_depth=3)
+model.fit(X, y)
+
+preds = model.predict(X)
+
+print("Predictions:", preds[:10])
+
+```
 ## Limitations & Future Work
 
 ### Known Limitations
